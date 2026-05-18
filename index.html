@@ -1,0 +1,1337 @@
+﻿<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Môi giới Pro</title>
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://xclncowkoedwqzcemhei.supabase.co" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <link
+    href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+    rel="stylesheet"
+  />
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/map.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+</head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+
+<body class="bg-base-200">
+
+  <section id="auth-section" class="public-site min-h-screen">
+    <header id="landing-navbar" class="public-header sticky top-0 z-50">
+      <div class="public-container flex items-center justify-between gap-4 py-3">
+        <a href="#home" class="flex items-center gap-3">
+          <img id="landing-logo" src="assets/logo.png" alt="Môi giới Pro" class="h-12 w-auto object-contain" />
+          <div>
+            <div class="font-extrabold text-lg leading-tight">Môi giới Pro</div>
+            <div class="text-xs text-slate-500">Nền tảng nguồn hàng và công cụ AI dành cho môi giới</div>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+          <a href="#public-listings" class="hover:text-primary">Nguồn mặt bằng</a>
+          <a href="#pricing" class="hover:text-primary">Bảng giá</a>
+          <a href="#login-card" class="hover:text-primary">Đăng nhập</a>
+        </nav>
+        <div class="flex items-center gap-2">
+          <button id="btn-open-login" class="btn btn-ghost btn-sm">Đăng nhập</button>
+          <button id="btn-open-register" class="btn btn-primary btn-sm">Đăng ký / Dùng thử</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="public-hero">
+        <div class="public-container public-hero-grid">
+          <div>
+            <p class="public-eyebrow">Nền tảng nguồn hàng cho môi giới</p>
+            <h1>Nguồn mặt bằng cho thuê TP.HCM dành cho môi giới</h1>
+            <p class="public-hero-copy">
+              Tìm nhanh nguồn theo quận, giá, diện tích, ngành nghề phù hợp. Dữ liệu được cập nhật liên tục.
+            </p>
+            <div class="flex flex-wrap gap-3 mt-6">
+              <a href="#public-listings" class="btn btn-primary btn-lg">Tìm mặt bằng ngay</a>
+              <a href="#pricing" class="btn btn-outline btn-lg">Xem gói thành viên</a>
+            </div>
+            <div class="public-stats">
+              <div><b>1.700+</b><span>nguồn mặt bằng</span></div>
+              <div><b>24/7</b><span>cập nhật dữ liệu</span></div>
+              <div><b>AI</b><span>gợi ý theo nhu cầu khách</span></div>
+            </div>
+          </div>
+          <div class="public-hero-panel">
+            <div class="public-search-demo">
+              <span>Yêu cầu khách</span>
+              <p>Q1 hoặc Q3, dưới 80 triệu, ngang trên 5m, phù hợp cafe/showroom</p>
+            </div>
+            <div class="public-match-card">
+              <span class="badge badge-success text-white border-none">Còn trống</span>
+              <h3>Mặt tiền trung tâm, phù hợp F&amp;B</h3>
+              <p>Quận 1 • 5x20m • 100m²</p>
+              <strong>75.000.000 đ/tháng</strong>
+            </div>
+            <div class="public-feature-list">
+              <div>AI lọc nguồn theo brief khách</div>
+              <div>Lưu tin và copy mô tả gửi khách</div>
+              <div>Admin quản lý nguồn hàng tập trung</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="public-listings" class="public-section">
+        <div class="public-container">
+          <div class="section-heading">
+            <div>
+              <p class="public-eyebrow">Marketplace</p>
+              <h2>Nguồn mặt bằng nổi bật</h2>
+              <p>Khách chưa đăng nhập chỉ xem thông tin rút gọn. Thành viên trả phí xem đầy đủ nguồn và liên hệ.</p>
+            </div>
+            <button class="btn btn-outline btn-sm" data-public-login>Đăng nhập để xem đầy đủ</button>
+          </div>
+          <div class="public-market-layout">
+            <aside class="public-filter-preview">
+              <h3>Lọc nhanh nguồn</h3>
+              <div class="public-filter-pill">Quận trung tâm</div>
+              <div class="public-filter-pill">Dưới 80 triệu</div>
+              <div class="public-filter-pill">Mặt tiền</div>
+              <div class="public-filter-pill">Phù hợp cafe</div>
+              <p>Đăng nhập để dùng bộ lọc nâng cao, bản đồ và AI tìm nguồn.</p>
+            </aside>
+            <div id="public-listing-grid" class="public-listing-grid">
+              <div class="public-loading">Đang tải nguồn mặt bằng...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" class="public-section public-pricing">
+        <div class="public-container">
+          <div class="section-heading centered">
+            <p class="public-eyebrow">Bảng giá</p>
+            <h2>Gói thành viên cho môi giới</h2>
+            <p>Chọn gói phù hợp với tốc độ khai thác nguồn và nhu cầu chăm khách.</p>
+          </div>
+          <div class="pricing-grid pricing-grid-two">
+            <article class="pricing-card">
+              <h3>Free</h3>
+              <strong>0đ</strong>
+              <p>Xem nguồn rút gọn, phù hợp trải nghiệm ban đầu.</p>
+              <ul>
+                <li>Preview mặt bằng công khai</li>
+                <li>Ẩn số điện thoại và địa chỉ chi tiết</li>
+                <li>Ẩn ghi chú nguồn hàng</li>
+              </ul>
+              <button class="btn btn-outline w-full" data-public-register>Dùng thử</button>
+            </article>
+            <article class="pricing-card featured">
+              <span class="pricing-badge">Phổ biến</span>
+              <h3>Pro</h3>
+              <strong>Liên hệ</strong>
+              <p>Dành cho đội nhóm môi giới cần AI và dữ liệu đầy đủ.</p>
+              <ul>
+                <li>Xem số điện thoại và địa chỉ chi tiết</li>
+                <li>Xem ghi chú nguồn hàng đầy đủ</li>
+                <li>AI tìm mặt bằng theo yêu cầu khách</li>
+              </ul>
+              <button class="btn btn-outline w-full" data-public-register>Đăng ký Pro</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="login-card" class="public-section">
+        <div class="public-container auth-panel-wrap">
+          <div class="auth-copy">
+            <p class="public-eyebrow">App dashboard</p>
+            <h2>Đăng nhập để vào dashboard môi giới</h2>
+            <p>Sau khi đăng nhập, bạn có AI tìm nguồn, bộ lọc nâng cao, tin đã lưu, bản đồ và công cụ copy mô tả gửi khách.</p>
+          </div>
+          <div class="card w-full max-w-md bg-base-100 shadow-xl">
+            <div class="card-body">
+          <div class="flex items-center gap-2 mb-4">
+            <img 
+              src="assets/logo.png" 
+              alt="Logo Môi giới Pro" 
+              class="h-12 w-auto object-contain" 
+            />
+            <div>
+              <h2 id="auth-form-title" class="card-title">Đăng nhập Môi giới Pro</h2>
+              <p id="auth-form-subtitle" class="text-xs opacity-70">
+                Xác thực bằng email, Google hoặc số điện thoại OTP.
+              </p>
+            </div>
+          </div>
+
+          <button id="btn-google-login" type="button" class="btn btn-outline w-full gap-2">
+            Đăng nhập bằng Google
+          </button>
+
+          <div class="divider my-3">hoặc</div>
+
+          <div class="tabs tabs-boxed bg-slate-100 mb-3">
+            <button id="auth-tab-email" type="button" class="tab tab-active flex-1">Email</button>
+            <button id="auth-tab-phone" type="button" class="tab flex-1">Số điện thoại</button>
+          </div>
+
+          <div id="auth-email-panel">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Email</span>
+            </label>
+            <input
+              id="login-email"
+              type="email"
+              placeholder="you@idland.vn"
+              class="input input-bordered"
+            />
+          </div>
+
+          <div class="form-control mt-4">
+            <button id="btn-login" class="btn btn-primary w-full">
+              Gửi mã xác thực
+            </button>
+          </div>
+          <p id="email-auth-message" class="mt-2 text-xs text-slate-500"></p>
+          </div>
+
+          <div id="auth-phone-panel" class="hidden">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Số điện thoại</span>
+              </label>
+              <input
+                id="login-phone"
+                type="tel"
+                placeholder="0901234567 hoặc +84901234567"
+                class="input input-bordered"
+              />
+            </div>
+            <button id="btn-send-phone-otp" type="button" class="btn btn-primary w-full mt-4">
+              Gửi mã OTP
+            </button>
+            <div id="phone-otp-wrap" class="form-control mt-3 hidden">
+              <label class="label">
+                <span class="label-text">Mã OTP</span>
+              </label>
+              <input
+                id="phone-otp-code"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                placeholder="Nhập mã 6 số"
+                class="input input-bordered"
+              />
+              <button id="btn-verify-phone-otp" type="button" class="btn btn-outline w-full mt-3">
+                Xác nhận
+              </button>
+            </div>
+            <p id="phone-auth-message" class="mt-2 text-xs text-slate-500"></p>
+          </div>
+
+          <div class="mt-3 text-center text-sm">
+            <button id="btn-toggle-register" type="button" class="btn btn-link btn-sm normal-case">
+              Tài khoản mới sẽ được tạo sau khi xác thực thành công
+            </button>
+          </div>
+
+          <p class="mt-3 text-xs opacity-70">
+            Không dùng mật khẩu tạm hoặc tài khoản ảo. Mỗi tài khoản phải xác thực email, Google hoặc OTP điện thoại.
+          </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="brand-footer">
+        <div class="public-container brand-footer-grid">
+          <div>
+            <h3>Môi giới Pro</h3>
+            <p>Nền tảng nguồn hàng và công cụ AI dành cho môi giới</p>
+            <p class="mt-3">Hotline:</p>
+            <p>Email:</p>
+          </div>
+          <div>
+            <h4>Nguồn hàng</h4>
+            <a href="#public-listings">Mặt bằng Quận 1</a>
+            <a href="#public-listings">Mặt bằng Quận 3</a>
+            <a href="#public-listings">Mặt bằng Bình Thạnh</a>
+            <a href="#public-listings">Mặt bằng Phú Nhuận</a>
+            <a href="#public-listings">Mặt bằng Tân Bình</a>
+          </div>
+          <div>
+            <h4>Dịch vụ</h4>
+            <a href="#login-card">Ký gửi mặt bằng</a>
+            <a href="#pricing">Gói thành viên</a>
+            <a href="#pricing">Bảng giá</a>
+            <a href="#login-card">Hỗ trợ môi giới</a>
+          </div>
+          <div>
+            <h4>Chính sách</h4>
+            <a href="#home">Về chúng tôi</a>
+            <a href="#home">Điều khoản sử dụng</a>
+            <a href="#home">Chính sách bảo mật</a>
+            <a href="#login-card">Liên hệ</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <dialog id="publicDetailDlg" class="modal">
+      <div class="modal-box max-w-2xl">
+        <div id="public-detail-content"></div>
+        <div class="modal-action">
+          <form method="dialog"><button class="btn">Đóng</button></form>
+          <button class="btn btn-primary" data-public-login>Đăng nhập xem đầy đủ</button>
+        </div>
+      </div>
+    </dialog>
+  </section>
+
+  <section id="share-page" class="public-site min-h-screen hidden">
+    <header class="public-header sticky top-0 z-50">
+      <div class="public-container flex items-center justify-between gap-4 py-3">
+        <a href="index.html#home" class="flex items-center gap-3">
+          <img src="assets/logo.png" alt="Môi giới Pro" class="h-12 w-auto object-contain" />
+          <div>
+            <div class="font-extrabold text-lg leading-tight">Môi giới Pro</div>
+            <div class="text-xs text-slate-500">Bộ sưu tập mặt bằng gửi khách</div>
+          </div>
+        </a>
+      </div>
+    </header>
+    <main class="public-container py-8">
+      <div id="share-content"></div>
+    </main>
+  </section>
+
+
+  <div id="app-root" class="hidden min-h-screen flex flex-col">
+    <div id="main-navbar" class="navbar bg-base-100 shadow-sm px-4 sticky top-0 z-50 transition-all duration-300 py-4 border-b border-base-200">
+      <div class="app-header-inner">
+        <div class="flex-1 flex items-center gap-3">
+          <img 
+            id="navbar-logo" 
+            src="assets/logo.png" 
+            alt="Môi giới Pro" 
+            class="h-16 w-auto object-contain transition-all duration-300" 
+          />
+          
+          <div>
+            <div class="font-bold text-lg leading-tight hidden md:block">Môi giới Pro</div>
+            <div class="text-xs opacity-60 hidden md:block">Nền tảng nguồn hàng và công cụ AI dành cho môi giới</div>
+          </div>
+        </div>
+
+        <div class="flex-none flex items-center gap-2 text-sm">
+          <div class="text-right hidden sm:block mr-2">
+               <div id="user-email-display" class="text-xs font-bold"></div>
+               <div class="flex justify-end gap-1 mt-1">
+                 <span id="role-badge" class="badge badge-outline"></span>
+                 <span id="plan-badge" class="badge badge-outline">Free</span>
+               </div>
+          </div>
+          <button id="btn-open-account" class="btn btn-ghost btn-sm" onclick="openAccountDialog()">Tài khoản</button>
+          <button id="btn-logout" class="btn btn-ghost btn-sm">Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+
+    <main class="app-container flex-1 w-full py-4">
+      <nav class="app-nav-menu mb-3">
+        <button class="app-nav-btn is-active" data-app-page="listings">Nguồn mặt bằng</button>
+        <button class="app-nav-btn" data-app-page="saved">Tin đã lưu</button>
+        <button class="app-nav-btn" data-app-page="collections">Bộ gửi khách</button>
+        <button class="app-nav-btn" data-app-page="notifications">
+          Thông báo <span id="notification-badge" class="badge badge-xs badge-primary hidden">0</span>
+        </button>
+        <button id="admin-users-nav-btn" class="app-nav-btn hidden" data-app-page="admin-users">Quản lý tài khoản</button>
+      </nav>
+
+      <section id="app-page-listings" class="app-page">
+      <div class="app-page-heading flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-bold">
+            Dashboard nguồn mặt bằng <span class="text-primary">Môi giới Pro</span>
+          </h1>
+          <p class="text-xs sm:text-sm opacity-70">
+            App dành cho môi giới: AI tìm nguồn, bộ lọc nâng cao, tin đã lưu, admin table và bản đồ.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 justify-end">
+          <div class="join">
+            <button id="btn-view-list" class="btn btn-sm join-item btn-active">Lưới</button>
+            <button id="btn-view-table" class="btn btn-sm join-item hidden md:block">Bảng (Admin)</button>
+            <button id="btn-view-map" class="btn btn-sm join-item">Bản đồ</button>
+          </div>
+          <div id="admin-pending-controls" class="hidden flex gap-2 overflow-x-auto whitespace-nowrap pb-2 md:pb-0 max-w-[100vw] md:max-w-auto px-2 md:px-0">
+            <button id="btn-toggle-pending" class="btn btn-warning btn-sm text-white shrink-0">
+              Cần duyệt
+              <span class="badge badge-sm bg-white text-warning ml-1 border-none" id="count-pending">0</span>
+            </button>
+
+            <button id="btn-toggle-rented-reports" class="btn btn-error btn-sm text-white shrink-0">
+              Báo hết
+              <span class="badge badge-sm bg-white text-error ml-1 border-none" id="count-rented-reports">0</span>
+            </button>
+
+            <button id="btn-toggle-reactivate" class="btn btn-info btn-sm text-white shrink-0">
+              Duyệt chạy lại
+              <span class="badge badge-sm bg-white text-info ml-1 border-none" id="count-reactivate">0</span>
+            </button>
+
+            <button id="btn-toggle-featured" class="btn btn-primary btn-sm shrink-0">
+              Tin nổi bật
+            </button>
+
+            <button id="btn-toggle-deleted" class="btn btn-outline btn-sm shrink-0">
+              Tin đã xóa
+            </button>
+
+            <button id="btn-approve-all" class="btn btn-success btn-sm text-white hidden shrink-0">
+              ✔ Duyệt tất cả
+            </button>
+            <button onclick="document.getElementById('toolDlg').showModal()" class="btn btn-neutral btn-sm text-white shrink-0">
+              🛠 Công cụ
+            </button>
+            <button onclick="openMembershipAdminDialog()" class="btn btn-primary btn-sm shrink-0">
+              Gói Pro
+            </button>
+          </div>
+          <button id="btn-open-add" class="btn btn-primary btn-sm">
+            + Thêm mặt bằng
+          </button>
+        </div>
+
+      </div>
+
+      <div class="app-quick-filters flex flex-wrap items-center gap-2 mb-3">
+        <span class="text-xs opacity-70">Lọc nhanh:</span>
+        <button class="btn btn-xs" data-quick="available">Còn trống</button>
+        <button class="btn btn-xs" data-quick="deposited">Giữ cọc</button>
+        <button class="btn btn-xs" data-quick-district="Quận 1">Quận 1</button>
+        <button class="btn btn-xs" data-quick-district="Quận 10">Quận 10</button>
+        <button class="btn btn-xs btn-ghost btn-outline" id="btn-clear-quick">
+          Xoá lọc nhanh
+        </button>
+
+        <!-- NÚT XEM GHIM -->
+        <button class="btn btn-xs btn-outline" id="btn-toggle-favorites">
+          Xem mặt bằng đã ghim
+        </button>
+      </div>
+
+      <section id="ai-suggest-panel" class="bg-white border border-slate-200 rounded-xl shadow-sm p-3 mb-4">
+        <div class="flex flex-col md:flex-row md:items-end gap-3">
+          <div class="flex-1 min-w-0">
+            <h2 class="font-bold text-sm text-slate-900">AI tìm mặt bằng theo yêu cầu khách</h2>
+            <p class="text-xs text-slate-500 mb-2">Nhập yêu cầu tự nhiên, hệ thống sẽ lọc và chấm điểm mặt bằng phù hợp.</p>
+            <textarea
+              id="ai-customer-request"
+              class="textarea textarea-bordered w-full min-h-[86px] text-sm"
+              placeholder="VD: Khách cần mặt bằng Q1 dưới 80tr, ngang trên 5m, phù hợp mở cafe hoặc showroom..."
+            ></textarea>
+          </div>
+          <button id="btn-ai-suggest" type="button" class="btn btn-primary md:w-56">
+            AI tìm mặt bằng phù hợp
+          </button>
+        </div>
+        <div id="ai-suggest-result" class="mt-3"></div>
+      </section>
+
+
+      <div class="app-shell">
+        <div id="mobile-filter-bar" class="md:hidden flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
+          <div class="text-xs text-slate-600">
+            <b id="mobile-count-show" class="text-slate-900">0</b> / <b id="mobile-count-total" class="text-slate-900">0</b> mặt bằng
+          </div>
+          <button id="btn-toggle-mobile-filters" type="button" class="btn btn-sm btn-primary">
+            Bộ lọc
+          </button>
+        </div>
+
+        <aside id="filters-panel" class="bg-base-100 rounded-xl shadow-sm p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-2 h-2 rounded-full bg-success"></span>
+            <h2 class="font-semibold text-sm">Bộ lọc</h2>
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label">
+              <span class="label-text text-xs">Từ khoá</span>
+            </label>
+            <input
+              id="filter-keyword"
+              type="text"
+              placeholder="VD: Trần Hưng Đạo, Q5..."
+              class="input input-sm input-bordered"
+            />
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label">
+              <span class="label-text text-xs">Tên đường</span>
+            </label>
+            <input
+              id="filter-street"
+              type="text"
+              placeholder="VD: Lê Văn Sỹ, Nguyễn Trãi..."
+              class="input input-sm input-bordered"
+            />
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label">
+              <span class="label-text text-xs">Quận</span>
+            </label>
+            <div class="dropdown dropdown-bottom w-full" id="district-dropdown-container">
+              <div tabindex="0" role="button" class="select select-sm select-bordered w-full flex items-center justify-between h-8 min-h-0 bg-white" id="district-display-btn">
+                <span id="district-display-text" class="truncate text-xs">Tất cả</span>
+                <span class="text-[10px] opacity-50">▼</span>
+              </div>
+              <ul tabindex="0" class="dropdown-content z-[100] menu p-2 shadow bg-base-100 rounded-box w-60 h-64 overflow-y-auto flex-nowrap block border border-base-200" id="district-list-checkboxes">
+                </ul>
+            </div>
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label">
+              <span class="label-text text-xs">Phường</span>
+            </label>
+            <select id="filter-ward" class="select select-sm select-bordered">
+              <option value="">Tất cả</option>
+            </select>
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label"><span class="label-text text-xs">Số PN</span></label>
+            <div class="dropdown dropdown-bottom w-full" id="pn-dropdown-container">
+              <div tabindex="0" role="button" class="select select-sm select-bordered w-full flex items-center justify-between h-8 min-h-0 bg-white">
+                <span id="pn-display-text" class="truncate text-xs">Tất cả</span>
+                <span class="text-[10px] opacity-50">▼</span>
+              </div>
+              <ul tabindex="0" class="dropdown-content z-[100] menu p-2 shadow bg-base-100 rounded-box w-40 h-auto max-h-60 overflow-y-auto block border border-base-200" id="pn-list-checkboxes">
+                </ul>
+            </div>
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label"><span class="label-text text-xs">Số WC</span></label>
+            <div class="dropdown dropdown-bottom w-full" id="wc-dropdown-container">
+              <div tabindex="0" role="button" class="select select-sm select-bordered w-full flex items-center justify-between h-8 min-h-0 bg-white">
+                <span id="wc-display-text" class="truncate text-xs">Tất cả</span>
+                <span class="text-[10px] opacity-50">▼</span>
+              </div>
+              <ul tabindex="0" class="dropdown-content z-[100] menu p-2 shadow bg-base-100 rounded-box w-40 h-auto max-h-60 overflow-y-auto block border border-base-200" id="wc-list-checkboxes">
+              </ul>
+            </div>
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label"><span class="label-text text-xs">Số tầng</span></label>
+            <div class="dropdown dropdown-bottom w-full" id="floors-dropdown-container">
+              <div tabindex="0" role="button" class="select select-sm select-bordered w-full flex items-center justify-between h-8 min-h-0 bg-white">
+                <span id="floors-display-text" class="truncate text-xs">Tất cả</span>
+                <span class="text-[10px] opacity-50">▼</span>
+              </div>
+              <ul tabindex="0" class="dropdown-content z-[100] menu p-2 shadow bg-base-100 rounded-box w-40 h-auto max-h-60 overflow-y-auto block border border-base-200" id="floors-list-checkboxes">
+              </ul>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-xs">Giá tối thiểu</span>
+              </label>
+              <input
+                id="filter-price-min"
+                type="number"
+                class="input input-sm input-bordered"
+              />
+            </div>
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-xs">Giá tối đa</span>
+              </label>
+              <input
+                id="filter-price-max"
+                type="number"
+                class="input input-sm input-bordered"
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-xs">Ngang tối thiểu (m)</span>
+              </label>
+              <input
+                id="filter-width-min"
+                type="number"
+                step="0.5"
+                placeholder="VD: 5"
+                class="input input-sm input-bordered"
+              />
+            </div>
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-xs">Dài tối thiểu (m)</span>
+              </label>
+              <input
+                id="filter-length-min"
+                type="number"
+                step="1"
+                placeholder="VD: 15"
+                class="input input-sm input-bordered"
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-xs">DT tối thiểu (m²)</span>
+              </label>
+              <input
+                id="filter-area-min"
+                type="number"
+                class="input input-sm input-bordered"
+              />
+            </div>
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-xs">DT tối đa (m²)</span>
+              </label>
+              <input
+                id="filter-area-max"
+                type="number"
+                class="input input-sm input-bordered"
+              />
+            </div>
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label">
+              <span class="label-text text-xs">Vị trí</span>
+            </label>
+            <select id="filter-frontage-type" class="select select-sm select-bordered">
+              <option value="">Tất cả</option>
+              <option value="mt">Mặt tiền</option>
+              <option value="goc">Góc 2 mặt tiền</option>
+              <option value="hxh">Hẻm xe hơi</option>
+              <option value="hem">Nhà hẻm</option>
+            </select>
+          </div>
+
+          <div class="form-control mb-3">
+            <label class="label">
+              <span class="label-text text-xs">Tình trạng</span>
+            </label>
+            <select id="filter-status" class="select select-sm select-bordered">
+              <option value="">Tất cả</option>
+              <option value="available">Còn trống</option>
+              <option value="deposited">Giữ cọc</option>
+              <option value="rented">Đã thuê</option>
+            </select>
+          </div>
+
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text text-xs">Sắp xếp</span>
+            </label>
+            <select id="filter-sort" class="select select-sm select-bordered">
+              <option value="updated_desc">Mới cập nhật</option>
+              <option value="price_asc">Giá tăng dần</option>
+              <option value="price_desc">Giá giảm dần</option>
+              <option value="area_asc">Diện tích tăng dần</option>
+              <option value="area_desc">Diện tích giảm dần</option>
+            </select>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="btn-apply" class="btn btn-sm btn-primary flex-1">
+              Lọc
+            </button>
+            <button id="btn-reset" class="btn btn-sm btn-ghost">
+              Xoá lọc
+            </button>
+          </div>
+        </aside>
+
+        <section class="app-content flex flex-col gap-3">
+          <div class="app-content-toolbar hidden md:flex items-center justify-between text-xs text-slate-600 bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+            <span>Hiển thị <b id="count-show" class="text-slate-900">0</b> / <b id="count-total" class="text-slate-900">0</b> mặt bằng</span>
+            
+          </div>
+
+          <div id="list-view">
+            <div id="grid" class="grid gap-3"></div>
+            <div class="mt-4 flex justify-center">
+              <button id="btn-load-more" class="btn btn-sm btn-ghost">Hết dữ liệu</button>
+            </div>
+          </div>
+
+          <div id="table-view" class="hidden overflow-x-auto bg-white rounded-xl shadow border border-base-200">
+            <table class="table table-xs table-pin-rows w-full">
+              <thead>
+                <tr class="bg-base-200">
+                  <th>Hình</th>
+                  <th>Mã / Địa chỉ</th>
+                  <th>Kết cấu / DT</th>
+                  <th>Giá (Triệu)</th>
+                  <th>Hoa hồng</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                </tbody>
+            </table>
+          </div>
+
+          <div id="map-view" class="hidden w-full h-[600px] rounded-xl border border-base-300 relative z-0">
+            <div id="premises-map" class="w-full h-full rounded-xl"></div>
+          </div>
+        </section>
+      </div>
+      </section>
+
+      <section id="app-page-saved" class="app-page hidden">
+        <div class="app-page-heading mb-3">
+          <div>
+            <h1 class="text-xl sm:text-2xl font-bold">Tin đã lưu</h1>
+            <p class="text-xs sm:text-sm opacity-70">Quản lý các mặt bằng yêu thích, ghi chú riêng và thêm vào bộ gửi khách.</p>
+          </div>
+        </div>
+        <div id="saved-listings-page" class="feature-grid"></div>
+      </section>
+
+      <section id="app-page-collections" class="app-page hidden">
+        <div class="app-page-heading mb-3">
+          <div>
+            <h1 class="text-xl sm:text-2xl font-bold">Bộ sưu tập gửi khách</h1>
+            <p class="text-xs sm:text-sm opacity-70">Tạo link chia sẻ danh sách mặt bằng sạch đẹp cho từng khách hàng.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openCollectionCreateDialog()">+ Tạo bộ mới</button>
+        </div>
+        <div id="collections-page" class="feature-grid"></div>
+      </section>
+
+      <section id="app-page-notifications" class="app-page hidden">
+        <div class="app-page-heading mb-3">
+          <div>
+            <h1 class="text-xl sm:text-2xl font-bold">Trung tâm thông báo</h1>
+            <p class="text-xs sm:text-sm opacity-70">Theo dõi nguồn hàng mới, cập nhật tin đã lưu và thông báo hệ thống.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="markAllNotificationsRead()">Đánh dấu tất cả đã đọc</button>
+        </div>
+        <div id="notifications-page" class="space-y-3"></div>
+      </section>
+
+      <section id="app-page-admin-users" class="app-page hidden">
+        <div class="app-page-heading mb-3">
+          <div>
+            <h1 class="text-xl sm:text-2xl font-bold">Quản lý tài khoản</h1>
+            <p class="text-xs sm:text-sm opacity-70">Admin quản lý vai trò, gói thành viên và thời hạn sử dụng của toàn bộ tài khoản.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="renderAdminUsersPage()">Làm mới</button>
+        </div>
+
+        <div class="admin-users-panel">
+          <div class="admin-users-filters">
+            <input id="admin-users-search" class="input input-bordered input-sm" placeholder="Tìm theo email hoặc tên..." />
+            <select id="admin-users-plan-filter" class="select select-bordered select-sm">
+              <option value="">Tất cả gói</option>
+              <option value="free">Free</option>
+              <option value="basic">Basic</option>
+              <option value="pro">Pro</option>
+            </select>
+            <select id="admin-users-status-filter" class="select select-bordered select-sm">
+              <option value="">Tất cả trạng thái</option>
+              <option value="active">Active</option>
+              <option value="expired">Expired</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="renderAdminUsersPage()">Lọc</button>
+          </div>
+
+          <div class="admin-users-table-wrap">
+            <table class="admin-users-table">
+              <thead>
+                <tr>
+                  <th>Người dùng</th>
+                  <th>Vai trò</th>
+                  <th>Gói hiện tại</th>
+                  <th>Trạng thái gói</th>
+                  <th>Ngày bắt đầu</th>
+                  <th>Ngày hết hạn</th>
+                  <th>Số ngày còn lại</th>
+                  <th>Hoạt động gần nhất</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-tbody">
+                <tr><td colspan="9">Chưa tải dữ liệu.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="brand-footer app-footer">
+      <div class="app-container brand-footer-grid">
+        <div>
+          <h3>Môi giới Pro</h3>
+          <p>Nền tảng nguồn hàng và công cụ AI dành cho môi giới</p>
+          <p class="mt-3">Hotline:</p>
+          <p>Email:</p>
+        </div>
+        <div>
+          <h4>Nguồn hàng</h4>
+          <a href="#">Mặt bằng Quận 1</a>
+          <a href="#">Mặt bằng Quận 3</a>
+          <a href="#">Mặt bằng Bình Thạnh</a>
+          <a href="#">Mặt bằng Phú Nhuận</a>
+          <a href="#">Mặt bằng Tân Bình</a>
+        </div>
+        <div>
+          <h4>Dịch vụ</h4>
+          <a href="#">Ký gửi mặt bằng</a>
+          <a href="#">Gói thành viên</a>
+          <a href="#">Bảng giá</a>
+          <a href="#">Hỗ trợ môi giới</a>
+        </div>
+        <div>
+          <h4>Chính sách</h4>
+          <a href="#">Về chúng tôi</a>
+          <a href="#">Điều khoản sử dụng</a>
+          <a href="#">Chính sách bảo mật</a>
+          <a href="#">Liên hệ</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog id="detailDlg" class="modal">
+    <div class="modal-box w-11/12 max-w-7xl p-4">
+      <div id="detail-content"></div>
+    </div>
+    
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <dialog id="deleteListingDlg" class="modal">
+    <div class="modal-box max-w-md">
+      <h3 class="font-bold text-xl">Xóa mặt bằng?</h3>
+      <p class="text-sm text-slate-500 mt-2">
+        Tin này sẽ bị xóa khỏi hệ thống. Hành động này không nên thực hiện nếu chỉ muốn ẩn tin.
+      </p>
+      <div class="modal-action">
+        <form method="dialog"><button class="btn">Hủy</button></form>
+        <button type="button" class="btn btn-error text-white" onclick="confirmSoftDeleteListing()">Xác nhận xóa</button>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <dialog id="accountDlg" class="modal">
+    <div class="modal-box max-w-xl">
+      <h3 class="font-bold text-xl">Tài khoản thành viên</h3>
+      <p class="text-sm text-slate-500 mt-1">Quản lý gói đang dùng và quyền xem nguồn hàng.</p>
+
+      <div class="membership-account-card mt-4">
+        <div>
+          <span>Gói hiện tại</span>
+          <b id="account-plan-name">Free</b>
+        </div>
+        <div>
+          <span>Ngày hết hạn</span>
+          <b id="account-plan-end">-</b>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3 mt-4">
+        <div class="pricing-card">
+          <h3>Free</h3>
+          <strong>0đ</strong>
+          <p>Ẩn số điện thoại, địa chỉ chi tiết và ghi chú nguồn hàng.</p>
+        </div>
+        <div class="pricing-card featured">
+          <span class="pricing-badge">Khuyến nghị</span>
+          <h3>Pro</h3>
+          <strong>Liên hệ</strong>
+          <p>Xem đầy đủ số điện thoại, địa chỉ chi tiết, ghi chú nguồn và công cụ AI.</p>
+          <button class="btn btn-primary w-full mt-3" onclick="toast('Vui lòng liên hệ admin để kích hoạt Pro.')">Nâng cấp Pro</button>
+        </div>
+      </div>
+
+      <div class="modal-action">
+        <form method="dialog"><button class="btn">Đóng</button></form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="membershipAdminDlg" class="modal">
+    <div class="modal-box max-w-2xl">
+      <h3 class="font-bold text-xl">Admin quản lý gói thành viên</h3>
+      <p class="text-sm text-slate-500 mt-1">Tìm user theo email và kích hoạt/gia hạn Pro thủ công.</p>
+
+      <div class="grid md:grid-cols-[1fr,140px,auto] gap-2 mt-4">
+        <input id="admin-subscription-email" class="input input-bordered" placeholder="email user..." />
+        <input id="admin-subscription-months" type="number" min="1" value="1" class="input input-bordered" />
+        <button class="btn btn-primary" onclick="adminFindSubscriptionUser()">Tìm user</button>
+      </div>
+
+      <div id="admin-subscription-result" class="mt-4 space-y-2"></div>
+
+      <div class="modal-action">
+        <form method="dialog"><button class="btn">Đóng</button></form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="adminUserPlanDlg" class="modal">
+    <div class="modal-box max-w-md">
+      <h3 id="admin-user-plan-title" class="font-bold text-xl">Cập nhật gói</h3>
+      <p id="admin-user-plan-subtitle" class="text-sm text-slate-500 mt-1"></p>
+
+      <div class="grid gap-3 mt-4">
+        <label class="form-control">
+          <span class="label-text text-xs mb-1">Chọn gói</span>
+          <select id="admin-user-plan-select" class="select select-bordered">
+            <option value="free">Free</option>
+            <option value="basic">Basic</option>
+            <option value="pro">Pro</option>
+          </select>
+        </label>
+        <label class="form-control">
+          <span class="label-text text-xs mb-1">Thời hạn</span>
+          <select id="admin-user-duration-select" class="select select-bordered">
+            <option value="30">30 ngày</option>
+            <option value="90">90 ngày</option>
+            <option value="180">180 ngày</option>
+            <option value="365">365 ngày</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="modal-action">
+        <button class="btn btn-primary" onclick="confirmAdminUserPlanChange()">Xác nhận</button>
+        <form method="dialog"><button class="btn">Đóng</button></form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="adminUserCancelDlg" class="modal">
+    <div class="modal-box max-w-md">
+      <h3 class="font-bold text-xl">Hủy gói thành viên?</h3>
+      <p id="admin-user-cancel-text" class="text-sm text-slate-500 mt-2"></p>
+      <div class="modal-action">
+        <button class="btn btn-error text-white" onclick="confirmAdminUserCancelPlan()">Xác nhận hủy</button>
+        <form method="dialog"><button class="btn">Đóng</button></form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="collectionCreateDlg" class="modal">
+    <div class="modal-box max-w-2xl">
+      <h3 class="font-bold text-xl">Tạo bộ gửi khách</h3>
+      <p class="text-sm text-slate-500 mt-1">Tạo bộ sưu tập mặt bằng và copy link gửi cho khách.</p>
+      <div class="grid md:grid-cols-2 gap-3 mt-4">
+        <input id="collection-title" class="input input-bordered" placeholder="Tiêu đề bộ sưu tập" />
+        <input id="collection-client-name" class="input input-bordered" placeholder="Tên khách hàng" />
+        <textarea id="collection-description" class="textarea textarea-bordered md:col-span-2" placeholder="Mô tả ngắn"></textarea>
+      </div>
+      <div class="modal-action">
+        <form method="dialog"><button class="btn">Hủy</button></form>
+        <button class="btn btn-primary" onclick="createClientCollection()">Tạo bộ</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="addToCollectionDlg" class="modal">
+    <div class="modal-box max-w-xl">
+      <h3 class="font-bold text-xl">Thêm vào bộ gửi khách</h3>
+      <p class="text-sm text-slate-500 mt-1">Chọn bộ sưu tập để thêm mặt bằng này.</p>
+      <div id="add-to-collection-list" class="mt-4 space-y-2"></div>
+      <div class="modal-action">
+        <form method="dialog"><button class="btn">Đóng</button></form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="editDlg" class="modal">
+    <div class="modal-box max-w-4xl">
+      <form method="dialog" class="modal-backdrop absolute inset-0" onclick="document.getElementById('editDlg').close()"></form>
+      <h3 class="font-bold text-lg mb-3">Chỉnh sửa mặt bằng</h3>
+
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="form-control md:col-span-2">
+          <label class="label">
+            <span class="label-text">Mã mặt bằng (code)</span>
+          </label>
+          <input id="edit-code" type="text" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control md:col-span-2">
+          <label class="label">
+            <span class="label-text">Tiêu đề / Địa chỉ hiển thị</span>
+          </label>
+          <input id="edit-address" type="text" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control">
+          <label class="label"><span class="label-text">Thành phố</span></label>
+          <input id="edit-city" type="text" class="input input-bordered w-full" />
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Quận</span></label>
+          <input id="edit-district" type="text" class="input input-bordered w-full" />
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Phường</span></label>
+          <input id="edit-ward" type="text" class="input input-bordered w-full" />
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Tên đường</span></label>
+          <input id="edit-street" type="text" class="input input-bordered w-full" />
+        </div>
+        <div class="form-control md:col-span-2">
+          <label class="label">
+            <span class="label-text font-bold text-primary">Cập nhật Tọa độ (Lat / Lng)</span>
+          </label>
+          <div class="join w-full">
+            <input id="edit-lat" type="text" class="input input-bordered join-item w-1/3" placeholder="Lat (Vĩ độ)" />
+            <input id="edit-lng" type="text" class="input input-bordered join-item w-1/3" placeholder="Lng (Kinh độ)" />
+            <button type="button" class="btn btn-accent join-item w-1/3 text-white" onclick="autoFetchCoordsForEdit()">
+              📍 Dò lại theo địa chỉ
+            </button>
+          </div>
+          <div id="edit-map-picker" class="w-full h-64 mt-3 rounded-lg border border-gray-300 z-0"></div>
+          <div class="text-[11px] text-gray-500 italic mt-1 text-right">* Kéo thả ghim đỏ để chỉnh vị trí chính xác</div>
+          <label class="label">
+            <span class="label-text-alt text-gray-500">
+              Admin có thể nhập thủ công hoặc bấm nút "Dò lại" để lấy tọa độ từ địa chỉ bên trên.
+            </span>
+          </label>
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Giá thuê (đ)</span></label>
+          <input id="edit-price" type="number" class="input input-bordered w-full" />
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Diện tích (m²)</span></label>
+          <input id="edit-area" type="number" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control">
+          <label class="label"><span class="label-text">Chiều ngang (m)</span></label>
+          <input id="edit-width" type="number" step="0.1" class="input input-bordered w-full" />
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Chiều dài (m)</span></label>
+          <input id="edit-length" type="number" step="0.1" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control">
+          <label class="label"><span class="label-text">Số tầng</span></label>
+          <input id="edit-floors" type="number" class="input input-bordered w-full" />
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Số PN</span></label>
+          <input id="edit-bedrooms" type="number" class="input input-bordered w-full" />
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Số WC</span></label>
+          <input id="edit-wc" type="number" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control md:col-span-2">
+          <label class="label"><span class="label-text">Kết cấu</span></label>
+          <input id="edit-ket-cau" type="text" class="input input-bordered w-full" placeholder="VD: Trệt 3 lầu, trống suốt…" />
+        </div>
+        
+        <div class="form-control md:col-span-2">
+            <label class="label"><span class="label-text">SĐT Chủ nhà (Chỉ Admin thấy)</span></label>
+            <input id="edit-contact-phone" type="text" class="input input-bordered w-full" placeholder="090..." />
+        </div>
+
+        <div class="form-control flex items-center gap-2 mt-2">
+          <input id="edit-frontage" type="checkbox" class="checkbox" />
+          <span class="label-text">Nhà mặt tiền</span>
+        </div>
+
+        <div class="form-control md:col-span-2 grid grid-cols-2 gap-2">
+            <div class="form-control">
+              <label class="label"><span class="label-text">Loại hình</span></label>
+              <select id="edit-road-type" class="select select-bordered w-full">
+                <option value="Hẻm">Hẻm</option>
+                <option value="Hẻm xe hơi">Hẻm xe hơi</option>
+                <option value="Mặt tiền">Mặt tiền</option>
+              </select>
+            </div>
+            <div class="form-control">
+              <label class="label"><span class="label-text">Hoa hồng (ngắn)</span></label>
+              <input id="edit-commission-text" type="text" class="input input-bordered w-full" placeholder="VD: 1 tháng" />
+            </div>
+        </div>
+
+        <div class="form-control">
+          <label class="label"><span class="label-text">Trạng thái</span></label>
+          <select id="edit-status" class="select select-bordered w-full">
+            <option value="available">Còn trống</option>
+            <option value="deposited">Giữ cọc</option>
+            <option value="rented">Đã thuê</option>
+          </select>
+        </div>
+
+        <div class="form-control md:col-span-2">
+          <label class="label"><span class="label-text">Hoa hồng / ghi chú HH</span></label>
+          <input id="edit-commission" type="text" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control md:col-span-2">
+          <label class="label"><span class="label-text">Danh sách ảnh (mỗi dòng 1 path)</span></label>
+          <textarea id="edit-images" class="textarea textarea-bordered w-full min-h-[80px]" placeholder="VD: MB0001/1.jpg
+MB0001/2.jpg"></textarea>
+        </div>
+
+        <div class="form-control md:col-span-2">
+          <label class="label"><span class="label-text">Thông tin chi tiết mặt bằng</span></label>
+          <textarea id="edit-detail" class="textarea textarea-bordered w-full min-h-[140px]"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-action">
+        <button class="btn btn-ghost" onclick="document.getElementById('editDlg').close()">Huỷ</button>
+        <button class="btn btn-primary" onclick="saveEditPremise()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="addDlg" class="modal">
+    <div class="modal-box max-w-4xl">
+      <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button></form>
+      <h3 class="font-bold text-lg text-primary mb-4">Đăng mặt bằng mới</h3>
+      
+      <div class="grid md:grid-cols-2 gap-4">
+          <div>
+             <div class="form-control mb-2">
+                 <span class="label-text text-xs font-bold">Địa chỉ (Số nhà + Đường) *</span>
+                 <input id="add-address" type="text" class="input input-sm input-bordered" placeholder="VD: 123 Nguyễn Trãi"/>
+             </div>
+             <div class="grid grid-cols-2 gap-2 mb-2">
+                 <div class="form-control">
+                     <span class="label-text text-xs">Quận *</span>
+                     <select id="add-district" class="select select-sm select-bordered">
+                        <option value="">-- Chọn --</option>
+                     </select>
+                 </div>
+                 <div class="form-control">
+                     <span class="label-text text-xs">Phường *</span>
+                     <select id="add-ward" class="select select-sm select-bordered" disabled>
+                        <option value="">-- Chọn Quận trước --</option>
+                     </select>
+                 </div>
+             </div>
+             <div class="form-control mb-2">
+                 <span class="label-text text-xs">Tên đường (để lọc)</span>
+                 <input id="add-street" type="text" class="input input-sm input-bordered"/>
+             </div>
+            <div class="form-control mb-2">
+                <span class="label-text text-xs font-bold">Tọa độ (Lat / Lng)</span>
+                <div class="join w-full">
+                    <input id="add-lat" type="text" class="input input-sm input-bordered join-item w-1/3" placeholder="Vĩ độ (Lat)" />
+                    <input id="add-lng" type="text" class="input input-sm input-bordered join-item w-1/3" placeholder="Kinh độ (Lng)" />
+                    <button type="button" class="btn btn-sm btn-accent join-item w-1/3 text-white" onclick="autoFetchCoords()">
+                        📍 Lấy tọa độ
+                    </button>
+                </div>
+                <div id="add-map-picker" class="w-full h-64 mt-3 rounded-lg border border-gray-300 z-0"></div>
+            </div>
+             <div class="form-control mt-3">
+                 <span class="label-text text-xs font-bold text-primary">Giá thuê (VNĐ) *</span>
+                 <input id="add-price" type="text" class="input input-sm input-bordered font-bold" onkeyup="formatCurrencyInput(this)" placeholder="0"/>
+             </div>
+             
+             <div class="grid grid-cols-2 gap-2 mt-3">
+                 <div class="form-control">
+                     <span class="label-text text-xs font-bold">Loại hình *</span>
+                     <select id="add-road-type" class="select select-sm select-bordered">
+                        <option value="Hẻm">Hẻm</option>
+                        <option value="Hẻm xe hơi">Hẻm xe hơi</option>
+                        <option value="Mặt tiền">Mặt tiền</option>
+                     </select>
+                 </div>
+                 <div class="form-control">
+                     <span class="label-text text-xs font-bold text-success">Hoa hồng</span>
+                     <input id="add-commission" type="text" class="input input-sm input-bordered" placeholder="VD: 1 tháng"/>
+                 </div>
+             </div>
+             <div class="form-control mt-2">
+                 <span class="label-text text-xs font-bold">Mô hình phù hợp</span>
+                 <input id="add-business-type" type="text" class="input input-sm input-bordered" placeholder="VD: cafe, spa, showroom"/>
+             </div>
+          </div>
+
+          <div>
+             <div class="grid grid-cols-3 gap-2 mb-2">
+                 <div><span class="text-xs">DT (m²)</span><input id="add-area" type="number" class="input input-sm input-bordered w-full"/></div>
+                 <div><span class="text-xs">Ngang</span><input id="add-width" type="number" class="input input-sm input-bordered w-full"/></div>
+                 <div><span class="text-xs">Dài</span><input id="add-length" type="number" class="input input-sm input-bordered w-full"/></div>
+             </div>
+             <div class="grid grid-cols-3 gap-2 mb-2">
+                 <div><span class="text-xs">Tầng</span><input id="add-floors" type="number" class="input input-sm input-bordered w-full"/></div>
+                 <div><span class="text-xs">PN</span><input id="add-bedrooms" type="number" class="input input-sm input-bordered w-full"/></div>
+                 <div><span class="text-xs">WC</span><input id="add-wc" type="number" class="input input-sm input-bordered w-full"/></div>
+             </div>
+             <div class="form-control mb-2">
+                 <span class="text-xs">Kết cấu</span>
+                 <input id="add-ket-cau" type="text" class="input input-sm input-bordered" placeholder="VD: Trệt 3 lầu..."/>
+             </div>
+             <div class="form-control mb-2">
+                 <span class="text-xs font-bold text-error">SĐT Chủ (Admin xem)</span>
+                 <input id="add-contact-phone" type="text" class="input input-sm input-bordered input-error" placeholder="090..."/>
+             </div>
+
+             <div class="md:col-span-2 border-t pt-3 mt-2">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="label-text font-bold">Hình ảnh thực tế</span>
+                    
+                    <label for="inp-upload-files" class="btn btn-sm btn-primary text-white cursor-pointer hover:bg-primary-focus">
+                        📷 Tải ảnh lên
+                    </label>
+                    <input id="inp-upload-files" type="file" multiple accept="image/*" class="hidden" onchange="handleSelectFiles(this)" />
+                </div>
+                
+                <div id="preview-container" class="flex flex-wrap gap-3 min-h-[100px] bg-base-200 p-2 rounded-lg border border-dashed border-gray-400">
+                    <p class="text-xs text-gray-500 w-full text-center py-8 pointer-events-none">
+                        Chưa có ảnh nào. <br/> Ảnh đầu tiên sẽ là <b>Ảnh Bìa</b>.
+                    </p>
+                </div>
+
+                <div class="form-control mt-2 relative">
+                    <div class="flex justify-between items-end mb-1">
+                        <span class="text-xs font-bold text-primary">AI Parse mô tả thô</span>
+                        <button id="btn-ai-parse" type="button" class="btn btn-xs btn-accent text-white animate-pulse">
+                            ⚡ Tự điền từ mô tả
+                        </button>
+                    </div>
+                    <textarea id="raw-description" class="textarea textarea-bordered w-full h-28 text-sm" placeholder="VD: MT Nguyễn Trãi Q5&#10;5x20&#10;1 trệt 3 lầu&#10;giá 75tr&#10;cọc 3 tháng&#10;phù hợp cafe"></textarea>
+                </div>
+
+                <div class="form-control mt-2 relative">
+                    <span class="text-xs">Mô tả chi tiết lưu vào tin đăng</span>
+                    <textarea id="add-detail" class="textarea textarea-bordered w-full h-24 text-sm" placeholder="Thông tin chi tiết sẽ được lưu vào tin đăng..."></textarea>
+                </div>
+             </div>
+          </div>
+      </div>
+
+      <div class="modal-action">
+        <button class="btn" onclick="document.getElementById('addDlg').close()">Huỷ</button>
+        <button id="btn-save-new" class="btn btn-primary" onclick="saveNewPremiseWithUpload()">
+            Lưu tin
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="demoNoticeDlg" class="modal">
+    <div class="modal-box max-w-md">
+      <h3 class="font-bold text-lg mb-2 text-error">Lưu ý: Bản DEMO</h3>
+      <p class="text-sm leading-relaxed">
+        Đây là bản <b>DEMO</b> nên còn nhiều lỗi, chức năng chưa hoàn thiện.<br/><br/>
+
+        Nhân sự xin số chủ qua admin. Hàng nào hết vui lòng báo với admin 
+        hoặc bấm nút <b>“Báo hết”</b> trên web để admin kiểm tra và cập nhật trạng thái.<br/><br/>
+
+        Nếu anh/chị có thắc mắc, phát hiện lỗi hoặc có đề xuất cải tiến trang web,
+        xin vui lòng liên hệ Team <b>"Văn Hóa"</b> để được hỗ trợ.<br/><br/>
+
+        <b>Xin cảm ơn!</b>
+      </p>
+
+      <div class="flex justify-center gap-4 mt-4">
+        <button id="btn-demo-disagree" class="btn btn-outline w-40">toi khong dong tinh</button>
+        <button id="btn-demo-agree" class="btn btn-outline w-40">toi dong tinh</button>
+      </div>
+
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast toast-end z-50 hidden">
+    <div class="alert alert-info text-sm" id="toast-text"></div>
+  </div>
+  <script src="js/supabase.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/subscriptions.js"></script>
+  <script src="js/admin-users.js"></script>
+  <script src="js/app-features.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/upload.js"></script>
+  <script src="js/listing-admin-controls.js"></script>
+  <script src="js/ai-smart-search.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/public-marketplace.js"></script>
+  <script type="module" src="src/js/ai-fill.js"></script>
+  <script type="module" src="src/js/ai-suggest.js"></script>
+  <dialog id="toolDlg" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg mb-4">Công cụ Admin</h3>
+      
+      <div class="border p-4 rounded-xl bg-base-200">
+        <h4 class="font-bold text-sm mb-2">Tự động cập nhật Tọa độ (Lat/Lng)</h4>
+        <p class="text-xs opacity-70 mb-3">
+          Hệ thống sẽ tìm những mặt bằng <b>chưa có tọa độ</b> và tự động quét từ địa chỉ.
+          <br/><span class="text-error">Lưu ý: Tốc độ chậm (1.5s/căn) để tránh bị khóa IP. Vui lòng không tắt tab.</span>
+        </p>
+        
+        <div class="flex items-center gap-2">
+          <button id="btn-start-sync" class="btn btn-primary btn-sm" onclick="startSyncCoordinates()">
+            ▶ Bắt đầu quét
+          </button>
+          <button class="btn btn-sm btn-ghost" onclick="STOP_SYNC = true">⏹ Dừng lại</button>
+        </div>
+
+        <div id="sync-status" class="mt-3 text-xs font-mono hidden">
+          Đang xử lý: <span id="sync-count" class="font-bold text-primary">0</span> / <span id="sync-total">0</span>
+          <div class="w-full bg-gray-300 h-2 rounded mt-1 overflow-hidden">
+             <div id="sync-bar" class="bg-primary h-full w-0 transition-all duration-300"></div>
+          </div>
+          <div id="sync-log" class="mt-2 max-h-32 overflow-y-auto border p-2 bg-white rounded text-[10px]"></div>
+        </div>
+      </div>
+
+      <div class="modal-action">
+        <form method="dialog"><button class="btn">Đóng</button></form>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>
