@@ -144,15 +144,37 @@ set search_path = public, auth
 as $$
 declare
   v_provider text := public.default_auth_provider(new_user);
+  v_is_bootstrap_admin boolean := lower(coalesce(new_user.email, '')) in ('admin@idl.com');
   v_full_name text := coalesce(
     new_user.raw_user_meta_data->>'full_name',
     new_user.raw_user_meta_data->>'name'
+  );
+  v_phone text := coalesce(
+    new_user.phone,
+    new_user.raw_user_meta_data->>'phone'
   );
   v_avatar text := coalesce(
     new_user.raw_user_meta_data->>'avatar_url',
     new_user.raw_user_meta_data->>'picture'
   );
+  v_existing_profile_id uuid;
 begin
+  select p.id into v_existing_profile_id
+  from public.profiles p
+  where lower(p.email) = lower(new_user.email)
+  limit 1;
+
+  if v_existing_profile_id is not null and v_existing_profile_id <> new_user.id then
+    update public.user_subscriptions
+      set user_id = new_user.id
+      where user_id = v_existing_profile_id;
+    update public.profiles
+      set id = new_user.id,
+          role = case when role = 'admin' or v_is_bootstrap_admin then 'admin' else role end,
+          updated_at = now()
+      where id = v_existing_profile_id;
+  end if;
+
   insert into public.profiles (
     id, email, phone, full_name, avatar_url, auth_provider,
     is_email_verified, is_phone_verified, role, last_seen_at
@@ -160,13 +182,13 @@ begin
   values (
     new_user.id,
     new_user.email,
-    new_user.phone,
+    v_phone,
     v_full_name,
     v_avatar,
     v_provider,
     new_user.email_confirmed_at is not null or v_provider = 'google',
     new_user.phone_confirmed_at is not null,
-    'user',
+    case when v_is_bootstrap_admin then 'admin' else 'user' end,
     now()
   )
   on conflict (id) do update
@@ -177,6 +199,11 @@ begin
         auth_provider = coalesce(excluded.auth_provider, public.profiles.auth_provider),
         is_email_verified = public.profiles.is_email_verified or excluded.is_email_verified,
         is_phone_verified = public.profiles.is_phone_verified or excluded.is_phone_verified,
+        role = case
+          when public.profiles.role = 'admin' then 'admin'
+          when v_is_bootstrap_admin then 'admin'
+          else public.profiles.role
+        end,
         last_seen_at = now();
 
   insert into public.user_subscriptions (

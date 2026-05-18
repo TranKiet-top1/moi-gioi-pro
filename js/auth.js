@@ -39,6 +39,10 @@
           if (profile.role) role = profile.role;
           if (profile.email || profile.phone) userEmail = profile.email || profile.phone;
       }
+      if (!profile && String(CURRENT_USER.email || "").toLowerCase() === "admin@idl.com") {
+          role = "admin";
+          userEmail = CURRENT_USER.email;
+      }
       CURRENT_ROLE = role;
       await loadCurrentSubscription();
 
@@ -94,19 +98,57 @@
 
     function setAuthMode(mode) {
       AUTH_MODE = mode === "register" ? "register" : "login";
+      const isRegister = AUTH_MODE === "register";
       const title = document.getElementById("auth-form-title");
       const subtitle = document.getElementById("auth-form-subtitle");
       const loginBtn = document.getElementById("btn-login");
       const toggleBtn = document.getElementById("btn-toggle-register");
+      const phoneWrap = document.getElementById("register-phone-wrap");
 
-      if (title) title.textContent = "Đăng nhập Môi giới Pro";
+      if (title) title.textContent = isRegister ? "Đăng ký Môi giới Pro" : "Đăng nhập Môi giới Pro";
       if (subtitle) {
-        subtitle.textContent = "Xác thực bằng email, Google hoặc số điện thoại OTP.";
+        subtitle.textContent = isRegister
+          ? "Tạo tài khoản bằng Gmail, số điện thoại và mật khẩu."
+          : "Đăng nhập bằng Google hoặc Gmail đã đăng ký.";
       }
-      if (loginBtn) loginBtn.textContent = "Gửi mã xác thực";
+      if (phoneWrap) phoneWrap.classList.toggle("hidden", !isRegister);
+      if (loginBtn) loginBtn.textContent = isRegister ? "Đăng ký tài khoản" : "Đăng nhập";
       if (toggleBtn) {
-        toggleBtn.textContent = "Tài khoản mới sẽ được tạo sau khi xác thực thành công";
+        toggleBtn.textContent = isRegister ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký mới";
       }
+    }
+
+    function scrollToLoginCard(mode = "login") {
+      if (typeof setAuthMode === "function") setAuthMode(mode);
+      const authSection = document.getElementById("auth-section");
+      const appRoot = document.getElementById("app-root");
+      const loginCard = document.getElementById("login-card");
+      authSection?.classList.remove("hidden");
+      appRoot?.classList.add("hidden");
+      loginCard?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function bindPublicAuthControls() {
+      document.getElementById("btn-open-login")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        scrollToLoginCard("login");
+      });
+      document.getElementById("btn-open-register")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        scrollToLoginCard("register");
+      });
+      document.querySelectorAll("[data-public-login]").forEach((el) => {
+        el.addEventListener("click", (event) => {
+          event.preventDefault();
+          scrollToLoginCard("login");
+        });
+      });
+      document.querySelectorAll("[data-public-register]").forEach((el) => {
+        el.addEventListener("click", (event) => {
+          event.preventDefault();
+          scrollToLoginCard("register");
+        });
+      });
     }
 
     function setAuthTab(tab) {
@@ -156,36 +198,82 @@
 
     async function handleLogin() {
       const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password")?.value.trim() || "";
       if (!email) {
-        toast("Vui lòng nhập email");
+        toast("Vui lòng nhập Gmail");
         return;
       }
-      if (Date.now() < AUTH_COOLDOWNS.email) {
-        toast("Vui lòng chờ trước khi gửi lại mã.");
+      if (!password) {
+        toast("Vui lòng nhập mật khẩu");
+        return;
+      }
+      if (AUTH_MODE === "register") {
+        await handleRegisterWithPassword(email, password);
         return;
       }
       const btn = document.getElementById("btn-login");
-      const msg = document.getElementById("email-auth-message");
       if (btn) btn.disabled = true;
       try {
-        const { error } = await db.auth.signInWithOtp({
+        const { error } = await db.auth.signInWithPassword({
           email,
+          password,
+        });
+        if (error) throw error;
+        toast("Đăng nhập thành công");
+        await initAuth();
+      } catch (error) {
+        toast("Đăng nhập thất bại. Vui lòng kiểm tra Gmail hoặc mật khẩu.");
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    async function handleRegisterWithPassword(email, password) {
+      const phone = normalizeVietnamPhone(document.getElementById("register-phone")?.value || "");
+      if (!phone || !/^\+\d{10,15}$/.test(phone)) {
+        toast("Vui lòng nhập số điện thoại hợp lệ.");
+        return;
+      }
+      if (password.length < 6) {
+        toast("Mật khẩu cần ít nhất 6 ký tự.");
+        return;
+      }
+      const btn = document.getElementById("btn-login");
+      if (btn) btn.disabled = true;
+      try {
+        const { data, error } = await db.auth.signUp({
+          email,
+          password,
           options: {
             emailRedirectTo: getAuthRedirectUrl(),
-            data: { auth_provider: "email" },
+            data: {
+              auth_provider: "email_password",
+              phone,
+            },
           },
         });
         if (error) throw error;
-        if (msg) msg.textContent = "Vui lòng kiểm tra email để xác thực.";
-        toast("Đã gửi liên kết/mã xác thực đến email.");
-        setCooldown("email", 60);
+        if (data?.session) {
+          try {
+            await db.rpc("ensure_current_user_profile_and_subscription");
+          } catch {}
+          toast("Đăng ký thành công");
+          await initAuth();
+        } else {
+          toast("Đã đăng ký. Vui lòng kiểm tra Gmail để xác thực tài khoản.");
+          setAuthMode("login");
+        }
       } catch (error) {
-        toast(getGenericOtpError(error));
+        toast(error?.message || "Đăng ký thất bại. Vui lòng thử lại.");
+      } finally {
         if (btn) btn.disabled = false;
       }
     }
 
     async function handleGoogleLogin() {
+      if (!window.supabase || !db?.auth) {
+        toast("Chưa tải được Supabase Auth. Vui lòng tải lại trang.");
+        return;
+      }
       const { error } = await db.auth.signInWithOAuth({
         provider: "google",
         options: {
@@ -267,4 +355,6 @@
       await db.auth.signOut();
       location.reload();
     }
+
+    document.addEventListener("DOMContentLoaded", bindPublicAuthControls);
 

@@ -68,37 +68,63 @@
       const message = String(error?.message || error || "").toLowerCase();
       return (
         message.includes("public.user_subscriptions") ||
-        message.includes("schema cache") ||
         message.includes("could not find the table") ||
-        message.includes("does not exist") ||
+        (message.includes("user_subscriptions") && message.includes("does not exist")) ||
+        (message.includes("user_subscriptions") && message.includes("schema cache")) ||
         error?.code === "42P01"
       );
     }
 
-    function renderAdminUsersSetupNotice(message) {
+    function isMissingProfilePhoneError(error) {
+      const message = String(error?.message || error || "").toLowerCase();
+      return (
+        message.includes("profiles.phone") ||
+        message.includes("column phone") ||
+        message.includes("phone does not exist") ||
+        message.includes("could not find the 'phone' column") ||
+        (message.includes("phone") && message.includes("schema cache"))
+      );
+    }
+
+    function renderAdminUsersSetupNotice(message, detail = "") {
       const tbody = document.getElementById("admin-users-tbody");
       if (!tbody) return;
       tbody.innerHTML = `
         <tr>
-          <td colspan="9">
+          <td colspan="11">
             <div class="admin-users-empty">
               <b>${adminEscapeHtml(message || "Chưa tạo bảng quản lý tài khoản.")}</b>
               <p>Hãy chạy file <code>project/supabase-admin-users.sql</code> trong Supabase SQL Editor, rồi tải lại trang.</p>
+              ${detail ? `<p class="text-error">${adminEscapeHtml(detail)}</p>` : ""}
             </div>
           </td>
         </tr>
       `;
     }
 
-    async function loadAdminUsersData() {
-      if (!isAdmin()) return [];
+    async function loadProfilesForAdminUsers() {
+      const { data, error } = await db
+        .from("profiles")
+        .select("id,email,phone,full_name,role,last_seen_at,created_at")
+        .order("created_at", { ascending: false });
 
-      const { data: profiles, error: profileError } = await db
+      if (!error) return data || [];
+      if (!isMissingProfilePhoneError(error)) throw error;
+
+      console.warn("profiles.phone chua san sang, fallback tai danh sach khong co so dien thoai.", error);
+      const fallback = await db
         .from("profiles")
         .select("id,email,full_name,role,last_seen_at,created_at")
         .order("created_at", { ascending: false });
 
-      if (profileError) throw profileError;
+      if (fallback.error) throw fallback.error;
+      return (fallback.data || []).map((profile) => ({ ...profile, phone: "-" }));
+    }
+
+    async function loadAdminUsersData() {
+      if (!isAdmin()) return [];
+
+      const profiles = await loadProfilesForAdminUsers();
 
       const userIds = (profiles || []).map((profile) => profile.id);
       let subscriptions = [];
@@ -152,7 +178,7 @@
       const status = document.getElementById("admin-users-status-filter")?.value || "";
 
       return rows.filter((row) => {
-        const text = `${row.email || ""} ${row.full_name || ""}`.toLowerCase();
+        const text = `${row.email || ""} ${row.phone || ""} ${row.full_name || ""}`.toLowerCase();
         if (q && !text.includes(q)) return false;
         if (plan && row.plan !== plan) return false;
         if (status && row.status !== status) return false;
@@ -178,7 +204,7 @@
       if (!tbody) return;
       const filtered = filterAdminUsers(rows);
       if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="9"><div class="admin-users-empty">Không có tài khoản phù hợp bộ lọc.</div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="11"><div class="admin-users-empty">Không có tài khoản phù hợp bộ lọc.</div></td></tr>`;
         return;
       }
 
@@ -190,9 +216,11 @@
               <span>${adminEscapeHtml(row.full_name || "Chưa có tên")}</span>
             </div>
           </td>
+          <td>${adminEscapeHtml(row.phone || "-")}</td>
           <td>${adminEscapeHtml(row.role || "user")}</td>
           <td>${adminPlanBadge(row.plan)}</td>
           <td>${adminStatusBadge(row.status)}</td>
+          <td>${adminFormatDate(row.created_at)}</td>
           <td>${adminFormatDate(row.started_at)}</td>
           <td>${adminFormatDate(row.expires_at)}</td>
           <td>${adminDaysLeft(row)}</td>
@@ -206,11 +234,11 @@
       const tbody = document.getElementById("admin-users-tbody");
       if (!tbody) return;
       if (!isAdmin()) {
-        tbody.innerHTML = `<tr><td colspan="9"><div class="admin-users-empty text-error">Chỉ admin mới được xem trang này.</div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="11"><div class="admin-users-empty text-error">Chỉ admin mới được xem trang này.</div></td></tr>`;
         return;
       }
 
-      tbody.innerHTML = `<tr><td colspan="9"><div class="admin-users-empty">Đang tải danh sách tài khoản...</div></td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="11"><div class="admin-users-empty">Đang tải danh sách tài khoản...</div></td></tr>`;
       try {
         ADMIN_USERS_CACHE = await loadAdminUsersData();
         renderAdminUsersTable(ADMIN_USERS_CACHE);
@@ -219,7 +247,7 @@
         if (isAdminUsersMissingTableError(error)) {
           renderAdminUsersSetupNotice("Chưa có bảng user_subscriptions hoặc cột mới của profiles.");
         } else {
-          tbody.innerHTML = `<tr><td colspan="9"><div class="admin-users-empty text-error">${adminEscapeHtml(error.message)}</div></td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="11"><div class="admin-users-empty text-error">${adminEscapeHtml(error.message)}</div></td></tr>`;
         }
       }
     }

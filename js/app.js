@@ -5,7 +5,7 @@
       document.getElementById("btn-verify-phone-otp")?.addEventListener("click", verifyPhoneOtp);
       document.getElementById("auth-tab-email")?.addEventListener("click", () => setAuthTab("email"));
       document.getElementById("auth-tab-phone")?.addEventListener("click", () => setAuthTab("phone"));
-      document.getElementById("btn-logout").addEventListener("click", handleLogout);
+      document.getElementById("btn-logout")?.addEventListener("click", handleLogout);
       const btnToggleRegister = document.getElementById("btn-toggle-register");
       if (btnToggleRegister) {
         btnToggleRegister.addEventListener("click", () => {
@@ -34,7 +34,7 @@
         });
       }
 
-      document.getElementById("btn-apply").addEventListener("click", () => {
+      document.getElementById("btn-apply")?.addEventListener("click", () => {
         applyFilters(true);
         closeMobileFilters();
       });
@@ -59,7 +59,7 @@
         if (!el) return;
         el.addEventListener("change", () => applyFilters(true));
       });
-      document.getElementById("btn-reset").addEventListener("click", () => {
+      document.getElementById("btn-reset")?.addEventListener("click", () => {
         document.querySelectorAll("aside input, aside select").forEach(el => {
             if(el.type === 'checkbox') el.checked = false; // Bỏ check hết
             else el.value = "";
@@ -85,7 +85,7 @@
         });
       }
 
-      document.getElementById("btn-load-more").addEventListener("click", () => {
+      document.getElementById("btn-load-more")?.addEventListener("click", () => {
         PAGE++;
         applyFilters(false);
       });
