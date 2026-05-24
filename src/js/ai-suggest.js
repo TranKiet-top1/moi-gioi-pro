@@ -24,15 +24,20 @@ function applyStreetSearch(query, streets = []) {
   if (!streets.length) return query;
   const street = streets[0].replace(/[%(),]/g, " ").trim();
   if (!street) return query;
-  return query.or(`street.ilike.%${street}%,address.ilike.%${street}%`);
+  return query.or(`street.ilike.%${street}%,street_name.ilike.%${street}%`);
 }
 
 async function runPremisesQuery(filters, options = {}) {
   const client = getDbClient();
-  let query = client.from("premises").select("*");
+  const safeColumns = [
+    "id", "title", "code", "images", "images_public", "price", "area", "width", "length",
+    "floors", "pn", "wc", "ket_cau", "suitable_for", "road_type", "property_type",
+    "frontage", "status", "ward", "district", "street", "street_name", "created_at",
+    "updated_at", "is_approved"
+  ].join(",");
+  let query = client.from("public_premises_view").select(safeColumns);
 
   query = query.eq("is_approved", true);
-  query = query.or("is_deleted.is.null,is_deleted.eq.false");
 
   if (!options.omitStatus && filters.status) query = query.eq("status", filters.status);
   if (!options.omitDistricts && filters.districts?.length) query = query.in("district", filters.districts);

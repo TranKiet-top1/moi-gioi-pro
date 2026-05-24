@@ -275,10 +275,10 @@
       async function queryPremisesByFilters(filters) {
         const safeColumns = [
           "id", "code", "images", "price", "area", "width", "length", "floors", "pn", "wc",
-          "ket_cau", "road_type", "frontage", "status", "ward", "district", "city", "street",
-          "created_at", "updated_at", "is_approved", "is_deleted"
+          "ket_cau", "road_type", "frontage", "status", "ward", "district", "street",
+          "created_at", "updated_at", "is_approved"
         ].join(",");
-        let query = db.from("premises").select(safeColumns).eq("is_approved", true).or("is_deleted.is.null,is_deleted.eq.false");
+        let query = db.from("public_premises_view").select(safeColumns).eq("is_approved", true);
         if (filters.status) query = query.eq("status", filters.status);
         if (filters.districts.length) query = query.in("district", filters.districts);
         if (filters.minPrice) query = query.gte("price", filters.minPrice);
@@ -294,7 +294,7 @@
         let relaxed = false;
         if (!rows.length && (filters.minWidth || filters.minArea || filters.minDepth || filters.minBedrooms)) {
           relaxed = true;
-          let relaxedQuery = db.from("premises").select(safeColumns).eq("is_approved", true).or("is_deleted.is.null,is_deleted.eq.false");
+          let relaxedQuery = db.from("public_premises_view").select(safeColumns).eq("is_approved", true);
           if (filters.status) relaxedQuery = relaxedQuery.eq("status", filters.status);
           if (filters.districts.length) relaxedQuery = relaxedQuery.in("district", filters.districts);
           if (filters.maxPrice) relaxedQuery = relaxedQuery.lte("price", Math.round(filters.maxPrice * 1.1));
