@@ -541,27 +541,27 @@
     top: 0;
     z-index: 4;
     display: block;
-    padding: 1rem;
+    padding: 0.82rem 0.9rem 0.72rem;
   }
 
   .listing-detail-title-wrap {
     min-width: 0;
-    padding-right: 3.25rem;
+    padding-right: 2.75rem;
   }
 
   .listing-detail-title-wrap h2 {
     max-width: 100%;
-    font-size: clamp(1.35rem, 6.2vw, 1.62rem);
-    line-height: 1.15;
+    font-size: clamp(1.18rem, 5.7vw, 1.42rem);
+    line-height: 1.12;
     overflow-wrap: anywhere;
     word-break: break-word;
   }
 
   .listing-detail-title-wrap p {
     display: block;
-    margin-top: 0.45rem;
-    font-size: 0.9rem;
-    line-height: 1.4;
+    margin-top: 0.34rem;
+    font-size: 0.82rem;
+    line-height: 1.3;
     overflow-wrap: anywhere;
   }
 
@@ -569,15 +569,15 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    gap: 0.55rem;
-    margin-top: 0.75rem;
+    gap: 0.42rem;
+    margin-top: 0.54rem;
   }
 
   .listing-icon-btn {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-    font-size: 1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 0.95rem;
   }
 
   .listing-icon-btn[title="Đóng"] {
@@ -591,8 +591,8 @@
 
   .listing-close-btn {
     position: absolute;
-    top: max(12px, env(safe-area-inset-top));
-    right: 1rem;
+    top: max(10px, env(safe-area-inset-top));
+    right: 0.9rem;
     z-index: 8;
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
@@ -600,19 +600,23 @@
 
   .listing-tool-btn {
     position: static;
-    flex: 0 0 46px;
+    flex: 0 0 40px;
   }
 
   .listing-detail-badges {
-    gap: 0.4rem;
-    margin-top: 0.6rem;
+    gap: 0.35rem;
+    margin-top: 0.45rem;
   }
 
   .listing-detail-badges span,
   .listing-status-badge {
-    min-height: 26px;
-    padding: 0 0.58rem;
-    font-size: 0.76rem;
+    min-height: 24px;
+    padding: 0 0.5rem;
+    font-size: 0.72rem;
+  }
+
+  .listing-code-badge {
+    display: none !important;
   }
 
   .listing-detail-body {

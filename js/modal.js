@@ -390,7 +390,7 @@
               </p>
               <div class="listing-detail-badges">
                 <span class="listing-status-badge ${statusMeta.cls}">${statusMeta.label}</span>
-                <span>Mã tin: <b>${detailEscapeHtml(item.code || "---")}</b></span>
+                <span class="listing-code-badge">Mã tin: <b>${detailEscapeHtml(item.code || "---")}</b></span>
                 <span>Cập nhật: ${detailEscapeHtml(updatedLabel || "-")}</span>
                 ${item.is_featured ? `<span>Nguồn nổi bật</span>` : ""}
               </div>
