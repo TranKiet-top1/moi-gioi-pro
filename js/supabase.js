@@ -59,6 +59,7 @@
     };
 
     let CURRENT_USER = null;
+    let CURRENT_PROFILE = null;
     let CURRENT_ROLE = "staff";
     let PAGE = 0;
     let TOTAL_COUNT = 0;

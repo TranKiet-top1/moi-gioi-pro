@@ -175,6 +175,13 @@
 
     function openAccountDialog() {
       updatePlanUI();
+      const nameInput = document.getElementById("account-full-name");
+      if (nameInput) {
+        const name = typeof getUserDisplayName === "function"
+          ? getUserDisplayName(CURRENT_USER, CURRENT_PROFILE)
+          : "";
+        nameInput.value = name || "";
+      }
       const dlg = document.getElementById("accountDlg");
       if (dlg && typeof dlg.showModal === "function") dlg.showModal();
     }

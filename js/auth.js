@@ -27,6 +27,7 @@
       // --- LẤY ROLE TỪ BẢNG PROFILES ---
       let role = "user";
       let userEmail = CURRENT_USER.email || CURRENT_USER.phone || "";
+      let displayName = getUserDisplayName(CURRENT_USER, null);
       
       // SỬA: Chỗ này file cũ của bạn đang dùng 'supabase' -> Gây lỗi văng ra
       const { data: profile } = await db
@@ -35,13 +36,27 @@
         .eq("id", CURRENT_USER.id)
         .maybeSingle();
       
+      CURRENT_PROFILE = profile || null;
       if (profile) {
           if (profile.role) role = profile.role;
           if (profile.email || profile.phone) userEmail = profile.email || profile.phone;
+          displayName = getUserDisplayName(CURRENT_USER, profile);
+          const metadataName = normalizeFullName(CURRENT_USER.user_metadata?.full_name || CURRENT_USER.user_metadata?.name || "");
+          if (!normalizeFullName(profile.full_name) && metadataName) {
+            db.from("profiles")
+              .update({ full_name: metadataName, updated_at: new Date().toISOString() })
+              .eq("id", CURRENT_USER.id)
+              .then(({ error }) => {
+                if (error) console.warn("Không tự lưu được tên Google vào profile", error);
+              });
+            CURRENT_PROFILE = { ...profile, full_name: metadataName };
+            displayName = metadataName;
+          }
       }
       if (!profile && String(CURRENT_USER.email || "").toLowerCase() === "admin@idl.com") {
           role = "admin";
           userEmail = CURRENT_USER.email;
+          displayName = getUserDisplayName(CURRENT_USER, null);
       }
       CURRENT_ROLE = role;
       await loadCurrentSubscription();
@@ -51,14 +66,13 @@
       document.getElementById("auth-section").classList.add("hidden");
       document.getElementById("app-root").classList.remove("hidden");
       
-      // Hiển thị tên/role
-      document.getElementById("user-email-display").textContent = userEmail;
+      // Hiển thị tên và gói, không hiển thị badge role "User" ở header chính.
+      document.getElementById("user-email-display").textContent = displayName || userEmail;
       const roleBadge = document.getElementById("role-badge");
-      roleBadge.textContent = (role === "admin" ? "Admin" : "User");
+      if (roleBadge) roleBadge.classList.add("hidden");
       updatePlanUI();
       
       if (role === "admin") {
-          roleBadge.className = "badge badge-error text-white";
           document.getElementById("admin-pending-controls").classList.remove("hidden");
           document.getElementById("admin-users-nav-btn")?.classList.remove("hidden");
           if (typeof bindAdminUsersFilters === "function") bindAdminUsersFilters();
@@ -66,7 +80,6 @@
           checkRentedReportCount();
           checkReactivateCount();
       } else {
-          roleBadge.className = "badge badge-outline";
           document.getElementById("admin-pending-controls").classList.add("hidden");
           document.getElementById("admin-users-nav-btn")?.classList.add("hidden");
       }
@@ -90,6 +103,31 @@
     let PHONE_OTP_FAILS = 0;
     let AUTH_COOLDOWNS = { email: 0, phone: 0 };
 
+    function normalizeFullName(value = "") {
+      return String(value || "").replace(/\s+/g, " ").trim();
+    }
+
+    function getUserDisplayName(user, profile = null) {
+      const metadata = user?.user_metadata || {};
+      const name = normalizeFullName(
+        profile?.full_name ||
+        metadata.full_name ||
+        metadata.name ||
+        metadata.display_name ||
+        ""
+      );
+      if (name) return name;
+      const email = user?.email || profile?.email || "";
+      const emailPrefix = email.includes("@") ? email.split("@")[0] : email;
+      return normalizeFullName(emailPrefix) || "Tài khoản";
+    }
+
+    function updateHeaderDisplayName(name) {
+      const cleanName = normalizeFullName(name);
+      const display = document.getElementById("user-email-display");
+      if (display) display.textContent = cleanName || getUserDisplayName(CURRENT_USER, CURRENT_PROFILE);
+    }
+
     function getAuthRedirectUrl() {
       return window.location.origin && window.location.origin !== "null"
         ? `${window.location.origin}${window.location.pathname}`
@@ -104,6 +142,7 @@
       const loginBtn = document.getElementById("btn-login");
       const toggleBtn = document.getElementById("btn-toggle-register");
       const phoneWrap = document.getElementById("register-phone-wrap");
+      const nameWrap = document.getElementById("register-name-wrap");
 
       if (title) title.textContent = isRegister ? "Đăng ký Môi giới Pro" : "Đăng nhập Môi giới Pro";
       if (subtitle) {
@@ -111,6 +150,7 @@
           ? "Tạo tài khoản bằng Gmail, số điện thoại và mật khẩu."
           : "Đăng nhập bằng Google hoặc Gmail đã đăng ký.";
       }
+      if (nameWrap) nameWrap.classList.toggle("hidden", !isRegister);
       if (phoneWrap) phoneWrap.classList.toggle("hidden", !isRegister);
       if (loginBtn) loginBtn.textContent = isRegister ? "Đăng ký tài khoản" : "Đăng nhập";
       if (toggleBtn) {
@@ -228,6 +268,11 @@
     }
 
     async function handleRegisterWithPassword(email, password) {
+      const fullName = normalizeFullName(document.getElementById("register-full-name")?.value || "");
+      if (fullName.length < 2) {
+        toast("Vui lòng nhập họ và tên");
+        return;
+      }
       const phone = normalizeVietnamPhone(document.getElementById("register-phone")?.value || "");
       if (!phone || !/^\+\d{10,15}$/.test(phone)) {
         toast("Vui lòng nhập số điện thoại hợp lệ.");
@@ -247,6 +292,8 @@
             emailRedirectTo: getAuthRedirectUrl(),
             data: {
               auth_provider: "email_password",
+              full_name: fullName,
+              name: fullName,
               phone,
             },
           },
@@ -255,6 +302,7 @@
         if (data?.session) {
           try {
             await db.rpc("ensure_current_user_profile_and_subscription");
+            await saveFullNameToProfileAndMetadata(fullName);
           } catch {}
           toast("Đăng ký thành công");
           await initAuth();
@@ -266,6 +314,55 @@
         toast(error?.message || "Đăng ký thất bại. Vui lòng thử lại.");
       } finally {
         if (btn) btn.disabled = false;
+      }
+    }
+
+    async function saveFullNameToProfileAndMetadata(fullName) {
+      const cleanName = normalizeFullName(fullName);
+      if (cleanName.length < 2) {
+        throw new Error("Vui lòng nhập họ và tên");
+      }
+      if (!CURRENT_USER) return;
+
+      const { error: authError } = await db.auth.updateUser({
+        data: {
+          full_name: cleanName,
+          name: cleanName,
+        },
+      });
+      if (authError) console.warn("Không cập nhật được auth metadata full_name", authError);
+
+      const { error: profileError } = await db
+        .from("profiles")
+        .update({ full_name: cleanName, updated_at: new Date().toISOString() })
+        .eq("id", CURRENT_USER.id);
+      if (profileError) throw profileError;
+
+      CURRENT_PROFILE = { ...(CURRENT_PROFILE || {}), full_name: cleanName };
+      CURRENT_USER = {
+        ...CURRENT_USER,
+        user_metadata: {
+          ...(CURRENT_USER.user_metadata || {}),
+          full_name: cleanName,
+          name: cleanName,
+        },
+      };
+      updateHeaderDisplayName(cleanName);
+    }
+
+    async function saveAccountFullName() {
+      const input = document.getElementById("account-full-name");
+      const fullName = normalizeFullName(input?.value || "");
+      if (fullName.length < 2) {
+        toast("Vui lòng nhập họ và tên");
+        input?.focus();
+        return;
+      }
+      try {
+        await saveFullNameToProfileAndMetadata(fullName);
+        toast("Đã cập nhật họ và tên.");
+      } catch (error) {
+        toast(error?.message || "Không thể cập nhật họ và tên.");
       }
     }
 
@@ -358,3 +455,6 @@
 
     document.addEventListener("DOMContentLoaded", bindPublicAuthControls);
 
+    window.getUserDisplayName = getUserDisplayName;
+    window.saveAccountFullName = saveAccountFullName;
+    window.updateHeaderDisplayName = updateHeaderDisplayName;

@@ -197,6 +197,19 @@
           </div>
 
           <div id="auth-email-panel">
+          <div id="register-name-wrap" class="form-control hidden">
+            <label class="label">
+              <span class="label-text">Họ và tên</span>
+            </label>
+            <input
+              id="register-full-name"
+              type="text"
+              placeholder="Nguyễn Văn A"
+              class="input input-bordered"
+              autocomplete="name"
+            />
+          </div>
+
           <div class="form-control">
             <label class="label">
               <span class="label-text">Gmail</span>
@@ -372,7 +385,6 @@
           <div class="text-right hidden sm:block mr-2">
                <div id="user-email-display" class="text-xs font-bold"></div>
                <div class="flex justify-end gap-1 mt-1">
-                 <span id="role-badge" class="badge badge-outline"></span>
                  <span id="plan-badge" class="badge badge-outline">Free</span>
                </div>
           </div>
@@ -891,6 +903,17 @@
     <div class="modal-box max-w-xl">
       <h3 class="font-bold text-xl">Tài khoản thành viên</h3>
       <p class="text-sm text-slate-500 mt-1">Quản lý gói đang dùng và quyền xem nguồn hàng.</p>
+
+      <div class="form-control mt-4">
+        <label class="label">
+          <span class="label-text">Họ và tên</span>
+        </label>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input id="account-full-name" type="text" class="input input-bordered flex-1" placeholder="Nhập họ và tên" />
+          <button type="button" class="btn btn-primary" onclick="saveAccountFullName()">Lưu tên</button>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">Tên này sẽ hiển thị ở góc tài khoản.</p>
+      </div>
 
       <div class="membership-account-card mt-4">
         <div>
