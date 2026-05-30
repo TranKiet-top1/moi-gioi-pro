@@ -396,9 +396,9 @@
               </div>
             </div>
             <div class="listing-header-actions">
-              <button type="button" class="listing-icon-btn" title="Lưu tin" data-save-listing="${id}" onclick="toggleSavedListing(event, '${id}')">♡</button>
-              <button type="button" class="listing-icon-btn" title="Copy mô tả" onclick="${canViewFull ? "copyPropertyInfo()" : "openAccountDialog()"}">↗</button>
-              <button type="button" class="listing-icon-btn" title="Đóng" onclick="document.getElementById('detailDlg').close()">×</button>
+              <button type="button" class="listing-icon-btn listing-tool-btn" title="Lưu tin" data-save-listing="${id}" onclick="toggleSavedListing(event, '${id}')">♡</button>
+              <button type="button" class="listing-icon-btn listing-tool-btn" title="Copy mô tả" onclick="${canViewFull ? "copyPropertyInfo()" : "openAccountDialog()"}">↗</button>
+              <button type="button" class="listing-icon-btn listing-close-btn" title="Đóng" onclick="document.getElementById('detailDlg').close()">×</button>
             </div>
           </header>
 

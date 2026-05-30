@@ -531,20 +531,22 @@
     height: 100dvh;
     max-height: 100dvh;
     min-height: 0;
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .listing-detail-header {
     position: sticky;
     top: 0;
     z-index: 4;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.65rem;
-    padding: 0.95rem 1rem 0.85rem;
+    display: block;
+    padding: 1rem;
   }
 
   .listing-detail-title-wrap {
     min-width: 0;
+    padding-right: 3.25rem;
   }
 
   .listing-detail-title-wrap h2 {
@@ -564,15 +566,17 @@
   }
 
   .listing-header-actions {
-    align-self: start;
-    justify-content: flex-end;
-    gap: 0.35rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.55rem;
+    margin-top: 0.75rem;
   }
 
   .listing-icon-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
     font-size: 1rem;
   }
 
@@ -583,6 +587,20 @@
     z-index: 8;
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+  }
+
+  .listing-close-btn {
+    position: absolute;
+    top: max(12px, env(safe-area-inset-top));
+    right: 1rem;
+    z-index: 8;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+  }
+
+  .listing-tool-btn {
+    position: static;
+    flex: 0 0 46px;
   }
 
   .listing-detail-badges {
@@ -600,7 +618,7 @@
   .listing-detail-body {
     gap: 0.8rem;
     padding: 0.85rem 1rem 0.95rem;
-    overflow-x: hidden;
+    overflow: visible;
   }
 
   .listing-detail-left,
@@ -724,12 +742,12 @@
   }
 
   .listing-action-bar {
-    position: sticky;
-    bottom: 0;
+    position: static;
     z-index: 5;
-    padding: 0.7rem 0.85rem calc(0.7rem + env(safe-area-inset-bottom));
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(10px);
+    margin: 0 1rem calc(1rem + env(safe-area-inset-bottom));
+    padding: 0.75rem 0 0;
+    background: #ffffff;
+    backdrop-filter: none;
   }
 
   .listing-action-bar-inner {
