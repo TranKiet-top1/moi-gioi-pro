@@ -510,31 +510,251 @@
 }
 
 @media (max-width: 640px) {
+  #detailDlg.modal {
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+  }
+
+  #detailDlg .modal-box {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-width: 0;
+    border-radius: 16px 16px 0 0;
+    overflow: hidden;
+  }
+
+  .listing-detail-shell {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+  }
+
   .listing-detail-header {
+    position: sticky;
+    top: 0;
+    z-index: 4;
     display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.65rem;
+    padding: 0.95rem 1rem 0.85rem;
+  }
+
+  .listing-detail-title-wrap {
+    min-width: 0;
+  }
+
+  .listing-detail-title-wrap h2 {
+    max-width: 100%;
+    font-size: clamp(1.35rem, 6.2vw, 1.62rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .listing-detail-title-wrap p {
+    display: block;
+    margin-top: 0.45rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
   }
 
   .listing-header-actions {
+    align-self: start;
     justify-content: flex-end;
+    gap: 0.35rem;
+  }
+
+  .listing-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 1rem;
+  }
+
+  .listing-icon-btn[title="Đóng"] {
+    position: fixed;
+    top: max(10px, env(safe-area-inset-top));
+    right: 10px;
+    z-index: 8;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
   }
 
   .listing-detail-badges {
     gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+
+  .listing-detail-badges span,
+  .listing-status-badge {
+    min-height: 26px;
+    padding: 0 0.58rem;
+    font-size: 0.76rem;
+  }
+
+  .listing-detail-body {
+    gap: 0.8rem;
+    padding: 0.85rem 1rem 0.95rem;
+    overflow-x: hidden;
+  }
+
+  .listing-detail-left,
+  .listing-detail-right {
+    min-width: 0;
+    gap: 0.75rem;
+  }
+
+  .listing-gallery-main {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+  }
+
+  .listing-empty-image small {
+    max-width: 220px;
+  }
+
+  .listing-image-count {
+    right: 10px;
+    bottom: 10px;
+    min-width: 44px;
+    padding: 0.28rem 0.55rem;
+    font-size: 0.76rem;
   }
 
   .listing-thumbs {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .listing-thumb {
+    border-radius: 11px;
+  }
+
+  .listing-map-card {
+    height: clamp(220px, 42vh, 280px);
+    border-radius: 16px;
+  }
+
+  .listing-map-open {
+    right: 10px;
+    bottom: 10px;
+    min-height: 38px;
+    border-radius: 12px;
+  }
+
+  .membership-map-lock {
+    min-height: 220px;
+    border-radius: 16px;
+    padding: 1rem;
+  }
+
+  .map-access-note {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    max-width: none;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  .listing-price-card,
+  .listing-info-card,
+  .listing-contact-card,
+  .listing-source-card {
+    border-radius: 16px;
+  }
+
+  .listing-price-card {
+    padding: 0.9rem;
+  }
+
+  .listing-price-card strong {
+    font-size: clamp(1.45rem, 7vw, 1.8rem);
+  }
+
+  .listing-quick-specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .listing-quick-specs span {
+    min-height: 54px;
+    border-radius: 13px;
+    padding: 0.55rem;
   }
 
   .listing-info-grid {
     grid-template-columns: minmax(0, 1fr);
+    gap: 0.55rem;
   }
 
   .listing-contact-card {
     display: grid;
+    gap: 0.7rem;
+    padding: 0.9rem;
+  }
+
+  .listing-contact-card .btn {
+    min-height: 44px;
+  }
+
+  .listing-bullet-list {
+    gap: 0.38rem;
+  }
+
+  .listing-bullet-list li {
+    font-size: 0.84rem;
+  }
+
+  .listing-source-card div {
+    gap: 0.55rem;
+  }
+
+  .listing-source-card,
+  .listing-info-card {
+    padding: 0.9rem;
+  }
+
+  .listing-action-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    padding: 0.7rem 0.85rem calc(0.7rem + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(10px);
   }
 
   .listing-action-bar-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .listing-action-bar .btn {
+    min-height: 48px;
+    height: auto;
+    border-radius: 13px;
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+    font-size: 0.92rem;
+    line-height: 1.15;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 380px) {
+  .listing-action-bar-inner {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .listing-detail-title-wrap h2 {
+    font-size: 1.28rem;
   }
 }
